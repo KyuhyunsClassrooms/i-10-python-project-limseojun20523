@@ -1,101 +1,145 @@
 # AI 활용 자유 주제 파이썬 미니 프로젝트
-# 이름 또는 학번: 
+# 이름 또는 학번:20523 임서준
 # 프로젝트 주제: 
 
-# ============================================================
-# 사용 안내
-# ------------------------------------------------------------
-# 이 파일은 예시 골격입니다.
-# 그대로 제출하지 말고, 반드시 자신의 주제에 맞게 수정하세요.
-#
-# 필수 조건
-# 1. 2차원 리스트 사용
-# 2. 함수 2개 이상, 가능하면 3개 이상 분리
-# 3. 조건문 사용
-# 4. 반복문 사용
-# 5. 실행 결과 출력
-# ============================================================
+import random
 
+# 선수 이름 입력
+player = input("선수 이름을 입력하세요: ")
 
-# ------------------------------------------------------------
-# 1. 데이터 준비: 2차원 리스트
-# ------------------------------------------------------------
-# 아래 예시는 "활동 추천 프로그램"입니다.
-# 자신의 주제에 맞게 data를 만드세요.
-#
-# 현재 열의 의미:
-# 0번 열: 활동 이름
-# 1번 열: 필요한 시간(분)
-# 2번 열: 추천 기분
-# 3번 열: 활동 유형
-# ------------------------------------------------------------
-
-activities = [
-    ["산책하기", 30, "피곤", "운동"],
-    ["짧은 낮잠", 20, "피곤", "휴식"],
-    ["좋아하는 음악 듣기", 10, "우울", "휴식"],
-    ["문제집 3쪽 풀기", 40, "차분", "공부"],
-    ["방 정리하기", 25, "답답", "생활"],
-    ["친구에게 연락하기", 15, "우울", "소통"],
+# 2차원 리스트: 토너먼트 단계 정보
+# [단계명, 설명, 정규전 횟수, 통과 목표]
+stages = [
+    ["8강", "첫 번째 경기", 5, "준결승 진출"],
+    ["4강", "두 번째 경기", 5, "결승 진출"],
+    ["결승", "최종 경기", 5, "우승"]
 ]
 
-
-# ------------------------------------------------------------
-# 2. 함수 정의
-# ------------------------------------------------------------
-
-def show_intro():
-    """프로그램 제목과 안내를 출력한다."""
-    print("=" * 40)
-    print("AI 활용 자유 주제 파이썬 미니 프로젝트")
-    print("예시: 기분과 시간에 따른 활동 추천기")
-    print("=" * 40)
-
-
-def get_user_input():
-    """사용자에게 기분과 남은 시간을 입력받는다."""
-    mood = input("현재 기분을 입력하세요. 예: 피곤, 우울, 차분, 답답: ")
-    minutes = int(input("사용 가능한 시간을 분 단위로 입력하세요: "))
-    return mood, minutes
-
-
-def find_recommendations(data, mood, minutes):
-    """2차원 리스트를 반복하며 조건에 맞는 활동을 찾는다."""
-    results = []
-
-    for row in data:
-        name = row[0]
-        required_minutes = row[1]
-        recommended_mood = row[2]
-        activity_type = row[3]
-
-        # 조건문: 사용자의 기분과 시간이 활동 조건에 맞는지 판단한다.
-        if recommended_mood == mood and required_minutes <= minutes:
-            results.append([name, required_minutes, activity_type])
-
-    return results
-
-
-def print_result(results):
-    """추천 결과를 출력한다."""
-    print("\n[추천 결과]")
-
-    if len(results) == 0:
-        print("조건에 맞는 활동이 없습니다.")
-        print("시간을 늘리거나 다른 기분을 입력해 보세요.")
+def direction(n):
+    if n == 1:
+        return "왼쪽"
+    elif n == 2:
+        return "가운데"
     else:
-        for item in results:
-            print(f"- {item[0]} / {item[1]}분 / 유형: {item[2]}")
+        return "오른쪽"
 
+def get_choice(prompt):
+    while True:
+        ans = input(prompt)
 
-def main():
-    show_intro()
-    mood, minutes = get_user_input()
-    results = find_recommendations(activities, mood, minutes)
-    print_result(results)
+        if ans == "1" or ans == "2" or ans == "3":
+            return int(ans)
+        else:
+            print("1, 2, 3 중에서 올바르게 입력하세요.")
 
+def user_attack():
+    shot = get_choice(f"{player}의 슛 방향 (1.왼쪽 2.가운데 3.오른쪽): ")
+    save = random.randint(1, 3)
 
-# ------------------------------------------------------------
-# 3. 프로그램 실행
-# ------------------------------------------------------------
-main()
+    print(player + "의 슛:", direction(shot))
+    print("컴퓨터 수비:", direction(save))
+
+    if shot == save:
+        print("막혔습니다!")
+        return 0
+    else:
+        print("골!")
+        return 1
+
+def computer_attack():
+    shot = random.randint(1, 3)
+    save = get_choice(f"{player}가 막을 방향 (1.왼쪽 2.가운데 3.오른쪽): ")
+
+    print("컴퓨터 슛:", direction(shot))
+    print(player + "의 수비:", direction(save))
+
+    if shot == save:
+        print("막았습니다!")
+        return 0
+    else:
+        print("실점!")
+        return 1
+
+def match(stage_info):
+    stage_name = stage_info[0]
+    round_count = stage_info[2]
+
+    print("\n====", stage_name, "====")
+    print(stage_info[1], "- 정규", round_count, "차전 진행")
+
+    # 점수판 (2차원 리스트)
+    score_board = [
+        [player, 0],
+        ["컴퓨터", 0]
+    ]
+
+    # 정규 승부차기
+    for i in range(round_count):
+        print("\n", i + 1, "차전")
+
+        print("[내 공격]")
+        score_board[0][1] += user_attack()
+
+        print("[컴퓨터 공격]")
+        score_board[1][1] += computer_attack()
+
+    # 동점이면 연장전
+    if score_board[0][1] == score_board[1][1]:
+
+        while True:
+            print("\n연장전!")
+
+            u = user_attack()
+            c = computer_attack()
+
+            score_board[0][1] += u
+            score_board[1][1] += c
+
+            # 승부가 나면 종료
+            if u > c:
+                break
+            elif c > u:
+                break
+
+    print("\n결과")
+    print(player + ":", score_board[0][1], "점")
+    print("컴퓨터:", score_board[1][1], "점")
+
+    if score_board[0][1] > score_board[1][1]:
+        print("이겼습니다!")
+        return True
+    else:
+        print("졌습니다!")
+        return False
+
+def show_trophy():
+    print("""
+         ___________
+        '._==_==_=_.'
+        .-\\:      /-.
+       | (|:.     |) |
+        '-|:.     |-'
+          \\::.    /
+           '::. .'
+             ) (
+           _.' '._
+          `\"\"\"\"\"\"\"`
+    """)
+    print("축하합니다!")
+    print(player, "선수가 토너먼트 챔피언이 되었습니다!")
+
+def tournament():
+    for stage_info in stages:
+
+        win = match(stage_info)
+
+        if not win:
+            print("\n토너먼트 탈락!")
+            return
+
+    print("\n우승!")
+    print("토너먼트 챔피언!")
+    show_trophy()
+
+# 게임 시작
+tournament()
