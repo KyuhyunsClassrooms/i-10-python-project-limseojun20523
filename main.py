@@ -1,14 +1,11 @@
 # AI 활용 자유 주제 파이썬 미니 프로젝트
 # 이름 또는 학번:20523 임서준
-# 프로젝트 주제: 
+# 프로젝트 주제: 축구 승부차기 게임
 
 import random
 
-# 선수 이름 입력
 player = input("선수 이름을 입력하세요: ")
 
-# 2차원 리스트: 토너먼트 단계 정보
-# [단계명, 설명, 정규전 횟수, 통과 목표]
 stages = [
     ["8강", "첫 번째 경기", 5, "준결승 진출"],
     ["4강", "두 번째 경기", 5, "결승 진출"],
@@ -39,6 +36,18 @@ def user_attack():
     print(player + "의 슛:", direction(shot))
     print("컴퓨터 수비:", direction(save))
 
+    miss = random.randint(1, 20)
+
+    if miss == 1:
+        print("골대를 맞췄습니다!")
+        return 0
+    elif miss == 2:
+        print("크게 빗나갔습니다!")
+        return 0
+    elif miss == 3:
+        print("헛발질을 했습니다!")
+        return 0
+
     if shot == save:
         print("막혔습니다!")
         return 0
@@ -52,6 +61,18 @@ def computer_attack():
 
     print("컴퓨터 슛:", direction(shot))
     print(player + "의 수비:", direction(save))
+
+    miss = random.randint(1, 20)
+
+    if miss == 1:
+        print("컴퓨터가 골대를 맞췄습니다!")
+        return 0
+    elif miss == 2:
+        print("컴퓨터가 크게 빗나갔습니다!")
+        return 0
+    elif miss == 3:
+        print("컴퓨터가 헛발질을 했습니다!")
+        return 0
 
     if shot == save:
         print("막았습니다!")
@@ -67,13 +88,11 @@ def match(stage_info):
     print("\n====", stage_name, "====")
     print(stage_info[1], "- 정규", round_count, "차전 진행")
 
-    # 점수판 (2차원 리스트)
     score_board = [
         [player, 0],
         ["컴퓨터", 0]
     ]
 
-    # 정규 승부차기
     for i in range(round_count):
         print("\n", i + 1, "차전")
 
@@ -83,7 +102,6 @@ def match(stage_info):
         print("[컴퓨터 공격]")
         score_board[1][1] += computer_attack()
 
-    # 동점이면 연장전
     if score_board[0][1] == score_board[1][1]:
 
         while True:
@@ -95,7 +113,6 @@ def match(stage_info):
             score_board[0][1] += u
             score_board[1][1] += c
 
-            # 승부가 나면 종료
             if u > c:
                 break
             elif c > u:
@@ -141,5 +158,4 @@ def tournament():
     print("토너먼트 챔피언!")
     show_trophy()
 
-# 게임 시작
 tournament()
