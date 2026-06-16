@@ -57,7 +57,7 @@ def user_attack():
 
 def computer_attack():
     shot = random.randint(1, 3)
-    save = get_choice(f"{player}가 막을 방향 (1.왼쪽 2.가운데 3.오른쪽): ")
+    save = get_choice(f"현재 골키퍼 [{player}] 막을 방향 선택: ")
 
     print("컴퓨터 슛:", direction(shot))
     print(player + "의 수비:", direction(save))
